@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Logis.EGIS.ShapeFileLib</id>
+    <version>4.7.0</version>
+    <title>EGIS.ShapeFileLib</title>
+    <authors>Easy GIS .NET</authors>
+    <owners>Easy GIS .NET</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>http://www.easygisdotnet.com/Default.aspx</licenseUrl>
+    <projectUrl>http://www.easygisdotnet.com/Default.aspx</projectUrl>
+	<description>ShapeFile reader and writer</description>
+  </metadata>
+  <files>
+    <file src="bin\Release\net5.0-windows7.0\EGIS.ShapeFileLib.dll" target="lib\net5.0-windows7.0" />
+    <file src="bin\Release\net472\EGIS.ShapeFileLib.dll" target="lib\net472" />
+	<file src="geomutil_lib*.dll" target="content" />
+  </files>
+</package>

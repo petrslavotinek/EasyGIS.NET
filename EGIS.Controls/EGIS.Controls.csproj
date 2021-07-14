@@ -6,7 +6,7 @@
     <SccLocalPath>SAK</SccLocalPath>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetFrameworks>net472;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>net472;net5.0-windows7.0</TargetFrameworks>
     <AssemblyVersion>4.7.0.0</AssemblyVersion>
 	  <UseWindowsForms>true</UseWindowsForms>
 
