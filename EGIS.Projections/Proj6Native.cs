@@ -43,7 +43,7 @@ namespace EGIS.Projections
         {
             get
             {
-                string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+                string codeBase = System.Reflection.Assembly.GetExecutingAssembly().Location;
                 UriBuilder uri = new UriBuilder(codeBase);
                 string path = Uri.UnescapeDataString(uri.Path);
                 return System.IO.Path.GetDirectoryName(path);
@@ -193,6 +193,7 @@ namespace EGIS.Projections
                 null, 0, 0);                    
         }
 
+#pragma warning disable CA1712 // Do not prefix enum values with type name
         public enum PJ_TYPE
         {
             PJ_TYPE_UNKNOWN,
@@ -242,6 +243,7 @@ namespace EGIS.Projections
             PJ_CATEGORY_CRS,
             PJ_CATEGORY_COORDINATE_OPERATION
         };
+#pragma warning restore CA1712 // Do not prefix enum values with type name
 
         [DllImport(ProjDllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern PJ_TYPE proj_get_type(IntPtr PJ);
