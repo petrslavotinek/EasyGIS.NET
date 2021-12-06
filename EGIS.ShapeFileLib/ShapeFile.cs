@@ -1,4 +1,4 @@
-#region Copyright and License
+﻿#region Copyright and License
 
 /****************************************************************************
 **
@@ -584,7 +584,17 @@ namespace EGIS.ShapeFileLib
 			set;
 		}
 
-#endregion
+        public string GetField(int rowIndex, int fieldIndex)
+        {
+            return myRenderer?.DbfReader.GetField(rowIndex, fieldIndex).Trim();
+        }
+        
+        public IEnumerable<string> IterateFieldValues(int fieldIndex)
+        {
+            return myRenderer?.DbfReader.IterateFieldValues(fieldIndex);
+        }
+
+        #endregion
 
         #region Render Methods
 
@@ -12883,11 +12893,12 @@ namespace EGIS.ShapeFileLib
             {
                 throw new ArgumentException("fieldIndex must be <= DBFRecordHeader.NumFields and >=0");
             }
-			
-			long FieldOffset = this.dBFRecordHeader.HeaderLength + this.dBFRecordHeader.RecordLength*(long)recordNumber + this.dBFRecordHeader.GetFieldDescriptions()[fieldIndex].RecordOffset;
+
+            var fieldDesc = this.dBFRecordHeader.GetFieldDescriptions()[fieldIndex];
+            long FieldOffset = this.dBFRecordHeader.HeaderLength + this.dBFRecordHeader.RecordLength*(long)recordNumber + fieldDesc.RecordOffset;
 			//string strField;
 			dbfFileStream.Seek(FieldOffset,SeekOrigin.Begin);
-			byte[] data = new byte[this.dBFRecordHeader.GetFieldDescriptions()[fieldIndex].FieldLength];
+			byte[] data = new byte[fieldDesc.FieldLength];
 			dbfFileStream.Read(data,0,data.Length);
             //foreach (System.Text.EncodingInfo info in System.Text.Encoding.GetEncodings())
             //{
@@ -12905,6 +12916,35 @@ namespace EGIS.ShapeFileLib
             //return System.Text.Encoding.UTF8.GetString(data);
             return this.stringEncoding.GetString(data);
 		}
+
+        /// <summary>
+        /// Iterates values in a particullar column
+        /// </summary>
+        public IEnumerable<string> IterateFieldValues(int fieldIndex)
+        {
+            if (fieldIndex >= dBFRecordHeader.FieldCount || fieldIndex < 0)
+            {
+                throw new ArgumentException("fieldIndex must be <= DBFRecordHeader.NumFields and >=0");
+            }
+            
+            if (dBFRecordHeader.RecordCount > 0)
+            {
+                var fieldDesc = dBFRecordHeader.GetFieldDescriptions()[fieldIndex];
+                int num = dBFRecordHeader.HeaderLength + fieldDesc.RecordOffset;
+                dbfFileStream.Seek(num, SeekOrigin.Begin);
+                byte[] data = new byte[fieldDesc.FieldLength];
+                dbfFileStream.Read(data, 0, data.Length);
+                yield return stringEncoding.GetString(data).Trim();
+
+                int jumpDelta = dBFRecordHeader.RecordLength - fieldDesc.FieldLength;
+                for (int i = 1; i < dBFRecordHeader.RecordCount; i++)
+                {
+                    dbfFileStream.Seek(jumpDelta, SeekOrigin.Current);
+                    dbfFileStream.Read(data, 0, data.Length);
+                    yield return stringEncoding.GetString(data).Trim();
+                }
+            }
+        }
 
         /// <summary>
         /// Get/Sets the Encoding used to read string fields
