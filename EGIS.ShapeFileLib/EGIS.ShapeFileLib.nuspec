@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Net5.EGIS.ShapeFileLib</id>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <title>Net5.EGIS.ShapeFileLib</title>
     <authors>Easy GIS .NET</authors>
     <owners>Easy GIS .NET</owners>
